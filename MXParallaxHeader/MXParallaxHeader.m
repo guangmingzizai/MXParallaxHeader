@@ -54,6 +54,7 @@ static void * const kMXParallaxHeaderKVOContext = (void*)&kMXParallaxHeaderKVOCo
 
 @implementation MXParallaxHeader {
     BOOL _isObserving;
+    UIEdgeInsets _contentInset;
 }
 
 @synthesize contentView = _contentView;
@@ -214,7 +215,8 @@ static void * const kMXParallaxHeaderKVOContext = (void*)&kMXParallaxHeaderKVOCo
 
 - (void)layoutContentView {
     CGFloat minimumHeight = MIN(self.minimumHeight, self.height);
-    CGFloat relativeYOffset = self.scrollView.contentOffset.y + self.scrollView.contentInset.top - self.height;
+    UIEdgeInsets contentInset = self.scrollView.contentInset;
+    CGFloat relativeYOffset = self.scrollView.contentOffset.y + contentInset.top - (contentInset.top - _contentInset.top) - self.height;
     CGFloat relativeHeight  = -relativeYOffset;
     
     CGRect frame = (CGRect){
@@ -241,6 +243,7 @@ static void * const kMXParallaxHeaderKVOContext = (void*)&kMXParallaxHeaderKVOCo
     //Adjust content inset
     inset.top = top;
     self.scrollView.contentInset = inset;
+    _contentInset = inset;
 }
 
 #pragma mark KVO
